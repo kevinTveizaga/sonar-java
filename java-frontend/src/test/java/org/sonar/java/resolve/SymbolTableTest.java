@@ -614,6 +614,22 @@ public class SymbolTableTest {
     assertThat(constDiamondNoArg.symbol()).isSameAs(noParamConstructor);
     assertThat(getNewClassTreeType(constDiamondNoArg)).isSameAs(result.symbol("dC").type());
     assertThat(result.reference(60, 15)).isSameAs(result.symbol("foo", 55));
+
+    // enclosing expression
+    classSymbol = (JavaSymbol.TypeJavaSymbol) result.symbol("F");
+    constructors = classSymbol.members.lookup("<init>");
+    noParamConstructor = constructors.get(0);
+    parametrizedConstructor = constructors.get(1);
+
+    IdentifierTree constructorCall = result.referenceTree(75, 15);
+    assertThat(constructorCall.symbol()).isSameAs(noParamConstructor);
+    assertThat(getNewClassTreeType(constructorCall)).isSameAs(result.symbol("fString").type());
+    assertThat(result.reference(75, 5)).isSameAs(result.symbol("foo", 72));
+
+    constructorCall = result.referenceTree(76, 15);
+    assertThat(constructorCall.symbol()).isSameAs(parametrizedConstructor);
+    assertThat(getNewClassTreeType(constructorCall)).isSameAs(result.symbol("fString").type());
+    assertThat(result.reference(76, 5)).isSameAs(result.symbol("foo", 72));
   }
 
   private static Type getNewClassTreeType(IdentifierTree constructorId) {
