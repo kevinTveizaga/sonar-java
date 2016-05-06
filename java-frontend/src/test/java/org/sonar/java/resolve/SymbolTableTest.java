@@ -510,9 +510,18 @@ public class SymbolTableTest {
 
     assertThat(stringConstructor.usages()).hasSize(2);
     assertThat(ObjectConstructor.usages()).hasSize(1);
+  }
 
-    assertThat(((JavaSymbol.TypeJavaSymbol) result.symbol("Inner")).members().scopeSymbols.get(0)).isSameAs(result.reference(36, 29));
-    assertThat(((JavaSymbol.TypeJavaSymbol) result.symbol("Inner2")).members().scopeSymbols.get(0)).isSameAs(result.reference(48, 30));
+  @Test
+  public void ConstructorWithEnclosingClass() {
+    Result result = Result.createFor("ConstructorWithEnclosingClass");
+
+    assertThat(((JavaSymbol.TypeJavaSymbol) result.symbol("Inner")).members().scopeSymbols.get(0)).isSameAs(result.reference(9, 29));
+    assertThat(((JavaSymbol.TypeJavaSymbol) result.symbol("Inner2")).members().scopeSymbols.get(0)).isSameAs(result.reference(21, 30));
+
+    assertThat(((JavaSymbol.TypeJavaSymbol) result.symbol("Inner3")).members().scopeSymbols.get(0)).isSameAs(result.reference(34, 19));
+    assertThat(((JavaSymbol.TypeJavaSymbol) result.symbol("Inner3")).members().scopeSymbols.get(1)).isSameAs(result.reference(34, 36));
+    assertThat(((JavaSymbol.TypeJavaSymbol) result.symbol("Foo3")).members().scopeSymbols.get(1)).isSameAs(result.reference(34, 5));
   }
 
   @Test
